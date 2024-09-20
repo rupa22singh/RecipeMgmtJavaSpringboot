@@ -1,6 +1,7 @@
 package com.rsing.recipe.srvice.impl;
 
 import com.rsing.recipe.entity.Recipe;
+import com.rsing.recipe.exception.ResourceNotFoundException;
 import com.rsing.recipe.payload.RecipeDto;
 import com.rsing.recipe.repository.RecipeRepository;
 import com.rsing.recipe.service.impl.RecipeServiceImpl;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
@@ -34,13 +35,13 @@ public class RecipeServiceImplTest {
     private RecipeDto recipeDto;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         MockitoAnnotations.initMocks(this);
         recipe = new Recipe();
         recipe.setId(1);
         recipe.setName("Test Recipe");
         recipe.setType(Recipe.RECIPE_TYPE.VEG);
-        recipe.setIngredients(Arrays.asList("Ingredient 1","Ingredient 2"));
+        recipe.setIngredients(Arrays.asList("Ingredient 1", "Ingredient 2"));
         recipe.setServings(4);
         recipe.setInstructions("Test instructions");
 
@@ -52,32 +53,35 @@ public class RecipeServiceImplTest {
         recipeDto.setServings(4);
         recipeDto.setInstructions("Test instructions");
 
-        when(modelMapper.map(recipe,RecipeDto.class)).thenReturn(recipeDto);
+        when(modelMapper.map(recipe, RecipeDto.class)).thenReturn(recipeDto);
         when(modelMapper.map(recipeDto, Recipe.class)).thenReturn(recipe);
         when(recipeServiceImpl.addRecipe(recipeDto)).thenReturn(recipeDto);
-
+        when(recipeRepository.save(recipe)).thenReturn(recipe);
+        when(modelMapper.map(recipe, RecipeDto.class)).thenReturn(recipeDto);
         recipeDto = modelMapper.map(recipe, RecipeDto.class);
+
     }
 
-    @Test
-    void testAddRecipe(){
 
+    @Test
+    void testAddRecipe() {
         RecipeDto addedRecipe = recipeServiceImpl.addRecipe(recipeDto);
-        assertThat(addedRecipe.getName()).isEqualTo(recipe.getName());
+        assertThat(addedRecipe).isNotNull();
+        assertThat(addedRecipe.getName()).isEqualTo(recipeDto.getName());
     }
 
     @Test
-    void testUpdateRecipe(){
+    void testUpdateRecipe() {
         RecipeDto updatedRecipeDto = new RecipeDto();
         updatedRecipeDto.setId(1);
         updatedRecipeDto.setName("Updated Recipe");
         updatedRecipeDto.setType("NONVEG");
-        updatedRecipeDto.setIngredients(Arrays.asList("Ingredient 0","Ingredient 3"));
+        updatedRecipeDto.setIngredients(Arrays.asList("Ingredient 0", "Ingredient 3"));
         updatedRecipeDto.setServings(4);
         updatedRecipeDto.setInstructions("Updated instructions");
 
         when(recipeRepository.findById(recipe.getId())).thenReturn(Optional.of(recipe));
-        when(recipeServiceImpl.updateRecipe(recipe.getId(),updatedRecipeDto)).thenReturn(updatedRecipeDto);
+        when(recipeServiceImpl.updateRecipe(recipe.getId(), updatedRecipeDto)).thenReturn(updatedRecipeDto);
         RecipeDto updatedRecipe = recipeServiceImpl.updateRecipe(recipe.getId(), updatedRecipeDto);
         assertThat(updatedRecipe.getName()).isEqualTo(updatedRecipeDto.getName());
     }
@@ -118,5 +122,22 @@ public class RecipeServiceImplTest {
         verify(recipeRepository, times(1)).findAll();
         verify(modelMapper, times(1)).map(recipe1, RecipeDto.class);
         verify(modelMapper, times(1)).map(recipe2, RecipeDto.class);
+    }
+
+    @Test
+    void testGetRecipe_Success() {
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        RecipeDto result = recipeServiceImpl.getRecipe(1L);
+        assertNotNull(result);
+        assertEquals(recipe.getName(), result.getName());
+        assertEquals(recipe.getType().name(), result.getType());
+    }
+
+    @Test
+    void testGetRecipe_NotFound() {
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> {
+            recipeServiceImpl.getRecipe(1L);
+        });
     }
 }

@@ -6,7 +6,11 @@ import com.rsing.recipe.payload.RecipeDto;
 import com.rsing.recipe.payload.RecipeResponse;
 import com.rsing.recipe.repository.RecipeRepository;
 import com.rsing.recipe.service.RecipeService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +25,11 @@ import java.util.stream.Collectors;
 public class RecipeServiceImpl implements RecipeService {
 
 
-
     private RecipeRepository recipeRepository;
     private ModelMapper modelMapper;
+
+    private static final Logger logger = LoggerFactory.getLogger(RecipeServiceImpl.class);
+
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              ModelMapper modelMapper) {
@@ -41,14 +47,19 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeDto addRecipe(RecipeDto recipeDto) {
+    public RecipeDto addRecipe(@Valid @NotNull RecipeDto recipeDto) {
+        logger.info("Adding new recipe: {}", recipeDto.getName());
+
         Recipe recipe = recipeRepository.save(mapToEntity(recipeDto));
         return mapToDto(recipe);
     }
 
     @Override
-    public RecipeDto updateRecipe(long recipeId, RecipeDto recipeDto) {
-//        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+    public RecipeDto updateRecipe(long recipeId,@Valid @NotNull RecipeDto recipeDto) {
+        if (recipeId != recipeDto.getId()) {
+            logger.error("Mismatched recipe ID during update: recipeId {} does not match recipeDto.getId() {}", recipeId, recipeDto.getId());
+            throw new IllegalArgumentException("Recipe ID mismatch.");
+        }
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new ResourceNotFoundException("Recipe", "id", recipeId));
 
         recipe.setName(recipeDto.getName());
@@ -88,14 +99,14 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeDto getRecipe(long id) {
-        Recipe recipe= recipeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recipe","recipe id",id));
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recipe", "recipe id", id));
         return mapToDto(recipe);
     }
 
 
     @Override
     public void deleteRecipe(long id) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recipe","recipe id",id));
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recipe", "recipe id", id));
         recipeRepository.delete(recipe);
 
     }

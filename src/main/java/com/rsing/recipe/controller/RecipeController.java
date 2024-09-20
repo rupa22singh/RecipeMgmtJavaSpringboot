@@ -5,6 +5,7 @@ import com.rsing.recipe.payload.RecipeDto;
 import com.rsing.recipe.payload.RecipeResponse;
 import com.rsing.recipe.service.RecipeService;
 import com.rsing.recipe.utils.AppsConstant;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class RecipeController {
     }
 
     @GetMapping("/allrecipes")
-    public ResponseEntity<List<RecipeDto>> getRecipes(){
+    public ResponseEntity<List<RecipeDto>> getAllRecipes(){
         return ResponseEntity.ok(recipeService.getRecipes());
     }
 
@@ -40,12 +41,12 @@ public class RecipeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RecipeDto> updateRecipe(@PathVariable("id") long recipeId, @RequestBody RecipeDto recipeDto){
+    public ResponseEntity<RecipeDto> updateRecipe(@PathVariable("id") long recipeId,@Valid @RequestBody RecipeDto recipeDto){
         return ResponseEntity.ok(recipeService.updateRecipe(recipeId,recipeDto));
     }
 
     @PostMapping
-    public ResponseEntity<RecipeDto> addRecipe(@RequestBody RecipeDto recipeDto){
+    public ResponseEntity<RecipeDto> addRecipe(@Valid @RequestBody RecipeDto recipeDto){
         return new ResponseEntity<>(recipeService.addRecipe(recipeDto), HttpStatus.CREATED);
     }
 
@@ -53,7 +54,7 @@ public class RecipeController {
     public ResponseEntity<DeleteResponse> deleteRecipe(@PathVariable("id")long recipeId){
         recipeService.deleteRecipe(recipeId);
         DeleteResponse deleteResponse = new DeleteResponse("Recipe deleted successfully.");
-        return ResponseEntity.ok(deleteResponse);
+        return ResponseEntity.noContent().build();
     }
 
 
