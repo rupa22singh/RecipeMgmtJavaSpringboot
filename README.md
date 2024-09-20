@@ -77,10 +77,18 @@ Exception Handling
 
 The application includes custom exception handling to provide meaningful error messages and HTTP status codes.
 
-Contributing
+References:
+https://start.spring.io/
 
-Feel free to submit pull requests or open issues if you find any bugs or have suggestions for improvement.
+https://maven.apache.org/
+
+https://www.javatpoint.com/spring-boot-h2-database
+
+https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#validation
+
+https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api
 
 License
 
 This project is licensed under the  Apache License Version 2.0
+
