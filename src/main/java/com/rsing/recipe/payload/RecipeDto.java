@@ -2,7 +2,6 @@ package com.rsing.recipe.payload;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rsing.recipe.entity.Recipe;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

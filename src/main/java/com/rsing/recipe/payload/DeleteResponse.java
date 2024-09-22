@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor(force = true)
 public class DeleteResponse {
 
     final String message;

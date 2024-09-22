@@ -2,7 +2,6 @@ package com.rsing.recipe.service;
 
 import com.rsing.recipe.payload.RecipeDto;
 import com.rsing.recipe.payload.RecipeResponse;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

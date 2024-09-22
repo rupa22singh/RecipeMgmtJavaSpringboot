@@ -1,18 +1,16 @@
 package com.rsing.recipe.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 public class RecipeAPIException extends RuntimeException{
-    private HttpStatus httpStatus;
-    private String message;
+    @Getter
+    private final HttpStatus httpStatus;
+    private final String message;
 
     public RecipeAPIException(HttpStatus httpStatus, String message) {
         this.httpStatus = httpStatus;
         this.message = message;
-    }
-
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
     }
 
     @Override

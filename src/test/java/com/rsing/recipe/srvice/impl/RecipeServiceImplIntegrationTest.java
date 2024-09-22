@@ -2,7 +2,6 @@ package com.rsing.recipe.srvice.impl;
 
 
 import com.rsing.recipe.entity.Recipe;
-import com.rsing.recipe.payload.RecipeDto;
 import com.rsing.recipe.repository.RecipeRepository;
 import com.rsing.recipe.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RecipeServiceImplIntegrationTest {
+class RecipeServiceImplIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +37,7 @@ public class RecipeServiceImplIntegrationTest {
     private RecipeService recipeService;
 
     private Recipe recipe;
-    private RecipeDto recipeDto;
+//    private RecipeDto recipeDto;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +50,7 @@ public class RecipeServiceImplIntegrationTest {
 
         recipeRepository.save(recipe);
 
-        recipeDto = modelMapper.map(recipe, RecipeDto.class);
+//        recipeDto = modelMapper.map(recipe, RecipeDto.class);
     }
 
     @Test

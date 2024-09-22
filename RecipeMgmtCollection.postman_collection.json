@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "68ee9379-f82c-427a-8d1d-1a581adb2d46",
+		"name": "RecipeMgmtCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11259931"
+	},
+	"item": [
+		{
+			"name": "Add Recipe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Recipe name is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"Paneer Butter Masala\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n    \"name\": \"Paneer Butter Masala\",\n    \"type\": \"veg\",\n    \"instructions\": \"cook on a low flame for better results\",\n    \"ingredients\": [\"4 Tomatoes\",\"100g Paneer\",\"4 Onion\",\"1/2 tsp Salt\",\" a pinch of Sugar\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/v1/recipes",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"recipes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Recipe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Recipe name is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"Updated Paneer Butter Masala\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 1,\n    \"name\": \"Updated Paneer Butter Masala\",\n    \"type\": \"VEG\",\n    \"ingredients\": [\"4 Tomatoes\", \"100g Paneer\", \"4 Onion\", \"1 tsp Salt\", \"a pinch of Sugar\"],\n    \"servings\": 2,\n    \"instructions\": \"Cook on a medium flame for better results.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/v1/recipes/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"recipes",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

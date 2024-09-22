@@ -20,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class RecipeServiceImplTest {
+class RecipeServiceImplTest {
 
     @Mock
     RecipeRepository recipeRepository;
@@ -36,7 +36,8 @@ public class RecipeServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
+
         recipe = new Recipe();
         recipe.setId(1);
         recipe.setName("Test Recipe");
